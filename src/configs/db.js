@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-module.exports = (url) =>{
+module.exports = async (url) =>{
     mongoose.Promise = global.Promise;
-    mongoose.connect(url, {
+    await mongoose.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: true

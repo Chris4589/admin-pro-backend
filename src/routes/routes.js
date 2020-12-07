@@ -1,3 +1,4 @@
-const hospital = require('./rHospital');
+const hospital = require('./user.routes');
+const auth = require('./auth.routes');
 
-module.exports = [].concat(hospital());
+module.exports = [].concat(hospital(), auth());
