@@ -10,8 +10,19 @@ var result;
 module.exports = {
     cback_findUser: async(req, res)=>{
         try {
-            result = await user.find({}, 'email role nombre google');
-            return responses(res, 200, result, false);
+            const { start, end, ...params } = req.query;
+            params.start = start || 0;
+            params.end = end || 5;
+
+            const [ result, total ] = await Promise.all([
+                user.find({}, 'email role nombre google img')
+                    .skip(Number(params.start))
+                    .limit(Number(params.end)),
+
+                user.count()
+            ]);
+            
+            return responses(res, 200, {result, total}, false);
         } catch (error) {
            console.log(`*Error al cargar usuarios ${error}`); 
            return responses(res, 500, `-Error al cargar usuarios ${error}`, true);

@@ -12,8 +12,6 @@ module.exports = (req, res, next) =>{
         const { uid } = jwt.verify(token, process.env.JWTSECRET);
 
         req.uid = uid;
-
-        console.log(uid);
         next();
     } catch (error) {
         console.log(`Logs walidar.jwt ${error}`);

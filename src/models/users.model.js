@@ -5,7 +5,7 @@
 //rol string obligatorio
 //google bool temp
 
-const { Schema, model, toObject } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const User = new Schema({
     nombre:{

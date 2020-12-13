@@ -4,8 +4,10 @@ const app = express();
 
 const router = require('./routes/routes');
 const db = require('./configs/db');
+const validations = require('./middlewares/validaciones-joi');
 require('dotenv').config();
-
+const swaggerUi = require('swagger-ui-express');
+const swagger = require('./middlewares/swagger');
 const port = process.env.PORT || 3030;
 
 //mean
@@ -21,18 +23,11 @@ app.use(express.json());
 
 app.use('/', router);
 
-app.use((err, req, res, next) => {
-    if (err && err.error && err.error.isJoi) {
-        return res.status(400).json({
-            error:true,
-            type: err.type,
-            message: err.error.message
-        });
-    }
-    next(err);
-});
+app.use(validations);
+
+app.use('/api-docs', swagger, swaggerUi.serve, swaggerUi.setup());
+
 
 app.listen(port, ()=>{
     console.log(`Server en puerto ${port}`);
 });
-

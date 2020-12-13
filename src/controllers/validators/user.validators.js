@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 module.exports = {
     queryId: Joi.object({
-        _id: Joi.string().required()
+        _id: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/)
     }),
     bodyPut: Joi.object({
         email: Joi.string().required(),

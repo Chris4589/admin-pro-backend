@@ -11,17 +11,23 @@ module.exports = () =>{
 
     router.get('/users/', validatorJWT, cback_findUser);
 
-    router.post('/users/', validatorJWT, 
-        validator.body(bodyPost),
+    router.post('/users/', [
+            validatorJWT, 
+            validator.body(bodyPost)
+        ],
         cback_createUser);
             
-    router.put('/users/', validatorJWT, 
-        validator.query(queryId),
-        validator.body(bodyPut),
+    router.put('/users/', [
+            validatorJWT, 
+            validator.query(queryId),
+            validator.body(bodyPut)
+        ],
         cback_updateUser);
 
-    router.delete('/users/', validatorJWT,
-        validator.query(queryId),
+    router.delete('/users/', [
+            validatorJWT,
+            validator.query(queryId)
+        ],
         cback_deleteUser);
 
     return router;
