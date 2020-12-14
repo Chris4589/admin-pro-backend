@@ -5,7 +5,8 @@ module.exports = async (url) =>{
     await mongoose.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: true
+        useFindAndModify: true,
+        useCreateIndex:true
     });
     return mongoose;
 }

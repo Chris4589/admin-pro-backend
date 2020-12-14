@@ -17,7 +17,6 @@ module.exports = {
             const { ...data } = req.body;
 
             data.user = req.uid;
-            console.log(data);
             result = await doctor.create(data);
 
             return responses(res, 200, result, false);

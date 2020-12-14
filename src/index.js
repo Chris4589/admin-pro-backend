@@ -13,13 +13,20 @@ const port = process.env.PORT || 3030;
 //mean
 //ugFF9tZeeEiTE3kx
 
+//google sign
+//id
+//323474616110-skletftrtlg9qt662222t39tn87e04h6.apps.googleusercontent.com
+
+//66sb_9OKFFc48h01cGsgAwYp
 db(process.env.DATABASE)
-    .then(res=> console.log(`connect db ${res}`))
+    .then(res=> console.log(`connect db`))
     .catch(err =>console.log(`error : ${err}`));
 
 app.use(cors());
 
 app.use(express.json());
+
+app.use(express.static('src/public'));
 
 app.use('/', router);
 

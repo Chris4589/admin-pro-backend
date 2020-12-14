@@ -3,6 +3,8 @@ const responses = require('../functions/response.functions');
 const bcrypt = require('bcryptjs');
 const jwt = require('../helpers/jwt');
 
+const { googleVerify } = require('../helpers/google-verify');
+
 var result;
 
 module.exports = {
@@ -26,6 +28,39 @@ module.exports = {
         } catch (error) {
             console.log(`*login ${error}`); 
             return responses(res, 500, `Error en el servidor`, true);
+        }
+    },
+    googleSingIn:async(req, res)=>{
+        try {
+            const { token } = req.body;
+
+            const { name, email, picture } = await googleVerify(token);
+            let usuario;
+            //const { email, password, ...fields } = req.body;
+
+            result = await user.findOne({ email });
+            if( !result ){
+                result = await user.create({
+                    nombre: name,
+                    email,
+                    password: '@@@@',
+                    img: picture
+                });
+            }
+            else{
+                //existe en DB lo de google
+                usuario = result;
+                usuario.google = true;
+
+                usuario.save();
+            }
+
+            const token_jwt = await jwt(result._id);
+
+            return responses(res, 200, token_jwt, false);
+        } catch (error) {
+            console.log(`*login google signIn ${error}`); 
+            return responses(res, 401, `*login google signIn ${error}`, true);
         }
     }
 }
