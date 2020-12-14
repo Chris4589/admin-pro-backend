@@ -62,5 +62,16 @@ module.exports = {
             console.log(`*login google signIn ${error}`); 
             return responses(res, 401, `*login google signIn ${error}`, true);
         }
+    },
+    renewToken:async(req, res)=>{
+        try {
+            const { uid } = req;
+            
+            result = await jwt(uid);
+            return responses(res, 200, result, false);
+        } catch (error) {
+            console.log(`*login ${error}`); 
+            return responses(res, 500, `*renew token ${error}`, true);
+        }
     }
 }

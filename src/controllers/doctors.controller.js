@@ -21,13 +21,42 @@ module.exports = {
 
             return responses(res, 200, result, false);
         } catch (error) {
-            return responses(res, 500, `Logs: ${error}`, true);;
+            return responses(res, 500, `Logs: ${error}`, true);
         }
     },
     cback_updateDoctor: async(req, res)=>{
-        responses(res, 200, 'up', false);
+        try {
+            const { _id } = req.query;
+            const { nombre, hospital } = req.body;
+
+            const [ exists, register ] = await Promise.all([doctor.findById(_id), doctor.findOne({nombre})]);
+            
+            if(!exists) return responses(res, 400, `No existe el doctor`, true);
+            if(register) return responses(res, 400, `El nombre ya existe`, true);
+
+            exists.nombre = nombre;
+            exists.hospital = hospital;
+            exists.user = req.uid;
+
+            exists.save();
+            
+            return responses(res, 200, exists, false);
+
+        } catch (error) {
+            return responses(res, 500, `Logs: ${error}`, true);
+        }
     },
     cback_deleteDoctor: async(req, res)=>{
-        responses(res, 200, 'del', false);
+        try {
+            const { _id } = req.query;
+
+            result = await doctor.findById(_id);
+            if(!result) return responses(res, 400, `No existe el doctor`, true);
+
+            result = await doctor.findByIdAndDelete(_id);
+            return responses(res, 200, result, false);
+        } catch (error) {
+            return responses(res, 500, `Logs: ${error}`, true);
+        }
     }
 };

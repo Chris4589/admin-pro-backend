@@ -16,7 +16,20 @@ module.exports = () => {
 
     router.get('/doctors/', cback_getDoctor);
 
-    router.put('/doctors/', cback_updateDoctor);
+    router.put('/doctors/', [
+            validarJwt,
+            validator.query(
+                Joi.object({
+                    _id: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/)
+                })
+            ),
+            validator.body(
+                Joi.object({
+                    nombre:Joi.string().required().not().empty(),
+                    hospital:Joi.string().required().not().empty()
+                })
+            ), 
+        ], cback_updateDoctor);
 
     router.post('/doctors/', [
             validarJwt,
@@ -29,7 +42,14 @@ module.exports = () => {
         ], 
         cback_createDoctor);
 
-    router.delete('/doctors/', cback_deleteDoctor);
+    router.delete('/doctors/', [
+        validarJwt,
+        validator.query(
+            Joi.object({
+                _id: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/)
+            })
+        )
+        ], cback_deleteDoctor);
     
     return router;
 }

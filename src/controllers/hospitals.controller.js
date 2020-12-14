@@ -24,9 +24,38 @@ module.exports = {
         }
     },
     cback_updateHospital: async(req, res)=>{
-        responses(res, 200, 'up', false);
+        try {
+            const { _id } = req.query;
+            const { nombre } = req.body;
+
+            const [ exists, register ] = await Promise.all([hospital.findById(_id), hospital.findOne({nombre})]);
+            
+            if(!exists) return responses(res, 400, `No existe el hosítal`, true);
+            if(register) return responses(res, 400, `El nombre ya existe`, true);
+
+            exists.nombre = nombre;
+            exists.user = req.uid;
+            exists.save();
+            
+            return responses(res, 200, exists, false);
+        } catch (error) {
+            return responses(res, 500, `Logs: cback_updateHospital ${error}`, true);
+        }
     },
     cback_deleteHospital: async(req, res)=>{
-        responses(res, 200, 'del', false);
+        try {
+            const { _id } = req.query;
+
+            result = await hospital.findById(_id);
+
+            if(!result)
+                return responses(res, 400, `No existe el hosítal`, true);
+
+            result = await hospital.findByIdAndDelete(_id);
+
+            return responses(res, 200, result, false);
+        } catch (error) {
+            return responses(res, 500, `Logs: cback_updateHospital ${error}`, true);
+        }
     }
 };

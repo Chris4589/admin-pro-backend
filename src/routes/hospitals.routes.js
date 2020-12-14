@@ -19,7 +19,17 @@ module.exports = () => {
         cback_getHospitales);
 
     router.put('/hospitals/', [
-        validarJWT
+        validarJWT,
+        validator.query(
+            Joi.object({
+                _id: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/)
+            })
+        ),
+        validator.body(
+            Joi.object({
+                nombre:Joi.string().required().not().empty()
+            })
+        )
     ],
      cback_updateHospital);
 
@@ -34,7 +44,12 @@ module.exports = () => {
      cback_createHospital);
 
     router.delete('/hospitals/', [
-        validarJWT
+        validarJWT,
+        validator.query(
+            Joi.object({
+                _id: Joi.string().required().regex(/^[0-9a-fA-F]{24}$/)
+            })
+        )
     ],
      cback_deleteHospital);
     
