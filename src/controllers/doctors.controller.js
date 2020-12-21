@@ -6,6 +6,13 @@ var result;
 module.exports = {
     cback_getDoctor: async(req, res)=>{
         try {
+            const { _id } = req.query;
+
+            if(_id){
+                result = await doctor.findById(_id).populate('user', 'nombre img').populate('hospital', 'nombre img');
+                return responses(res, 200, result, false);
+            }
+
             result = await doctor.find().populate('user', 'nombre img').populate('hospital', 'nombre img');
             return responses(res, 200, result, false);
         } catch (error) {
@@ -32,7 +39,7 @@ module.exports = {
             const [ exists, register ] = await Promise.all([doctor.findById(_id), doctor.findOne({nombre})]);
             
             if(!exists) return responses(res, 400, `No existe el doctor`, true);
-            if(register) return responses(res, 400, `El nombre ya existe`, true);
+            if(register && nombre !==register.nombre) return responses(res, 400, `El nombre ya existe`, true);
 
             exists.nombre = nombre;
             exists.hospital = hospital;

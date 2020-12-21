@@ -28,7 +28,7 @@ module.exports = {
             const regex = new RegExp(searches, 'i');
 
             switch (table) {
-                case 'medicos':
+                case 'doctors':
                     result = await doctor.find({nombre:regex}, '')
                                         .populate('user', 'nombre img')
                                         .populate('hospital', 'nombre img');

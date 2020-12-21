@@ -36,7 +36,6 @@ module.exports = {
 
             const { name, email, picture } = await googleVerify(token);
             let usuario;
-            //const { email, password, ...fields } = req.body;
 
             result = await user.findOne({ email });
             if( !result ){
@@ -66,9 +65,13 @@ module.exports = {
     renewToken:async(req, res)=>{
         try {
             const { uid } = req;
-            
-            result = await jwt(uid);
-            return responses(res, 200, result, false);
+
+            const [ token, data ] = await Promise.all([
+                jwt(uid),
+                user.findById(uid, 'role google _id nombre email img')
+            ]);
+
+            return responses(res, 200, {token, data}, false);
         } catch (error) {
             console.log(`*login ${error}`); 
             return responses(res, 500, `*renew token ${error}`, true);

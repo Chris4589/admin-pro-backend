@@ -4,9 +4,20 @@ var result;
 
 module.exports = {
     cback_getHospitales: async(req, res)=>{
+        const { start, end, ...params } = req.query;
+            params.start = start || 0;
+            params.end = end || 5;
+
         try {
-            result = await hospital.find().populate('user', 'nombre img');//traer esos datos de otra collecion por llave ref
-            return responses(res, 200, result, false);
+            const [ data, total ] = await Promise.all([
+                hospital.find().populate('user', 'nombre img')
+                        .skip(Number(params.start))
+                        .limit(Number(params.end)),
+
+                hospital.count()
+            ]);
+            
+            return responses(res, 200, {data, total}, false);
         } catch (error) {
             return responses(res, 500, `Logs ${error}`, true);
         }
@@ -31,7 +42,7 @@ module.exports = {
             const [ exists, register ] = await Promise.all([hospital.findById(_id), hospital.findOne({nombre})]);
             
             if(!exists) return responses(res, 400, `No existe el hosítal`, true);
-            if(register) return responses(res, 400, `El nombre ya existe`, true);
+            if(register && nombre !== register.nombre) return responses(res, 400, `El nombre ya existe`, true);
 
             exists.nombre = nombre;
             exists.user = req.uid;

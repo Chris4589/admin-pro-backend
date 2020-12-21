@@ -6,7 +6,8 @@ module.exports = {
     }),
     bodyPut: Joi.object({
         email: Joi.string().required().not().empty(),
-        nombre: Joi.string().required().not().empty()
+        nombre: Joi.string().required().not().empty(),
+        role: Joi.string().not().empty()
     }),
     bodyPost: Joi.object({
         email: Joi.string().required().not().empty(),

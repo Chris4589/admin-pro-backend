@@ -34,7 +34,7 @@ module.exports = {
                     return responses(res, 500, `Logs: ${err}`, true);
                 }
                 const status = await updateFile(_id, collection, FileName);
-                return responses(res, 200, {msg:'File uploaded!', status}, false);
+                return responses(res, 200, {msg:'File uploaded!', status, FileName}, false);
             });
 
         } catch (error) {
@@ -49,7 +49,7 @@ module.exports = {
 
             if(!existsFile(collection, file)){
                 const notExistsImg = path.join( __dirname, '../uploads/no-img.jpg' );
-                return res.status(400).sendFile(notExistsImg);
+                return res.status(200).sendFile(notExistsImg);
             }
             
             return res.status(200).sendFile(pathImg);

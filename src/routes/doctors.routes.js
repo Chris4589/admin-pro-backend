@@ -14,7 +14,12 @@ const validator = require('express-joi-validation').createValidator({ passError:
 
 module.exports = () => {
 
-    router.get('/doctors/', cback_getDoctor);
+    router.get('/doctors/', [validarJwt,
+        validator.query(
+            Joi.object({
+                _id: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+            })
+        )], cback_getDoctor);
 
     router.put('/doctors/', [
             validarJwt,

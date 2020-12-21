@@ -12,7 +12,6 @@ module.exports = () =>{
     router.get('/users/', validatorJWT, cback_findUser);
 
     router.post('/users/', [
-            validatorJWT, 
             validator.body(bodyPost)
         ],
         cback_createUser);

@@ -22,7 +22,6 @@ module.exports = () => {
         ], cback_Upload);
 
     router.get('/upload/', [
-            validarJWT,
             validator.query(Joi.object({
                 collection:Joi.string().required().not().empty(), 
                 file:Joi.string().required().not().empty()
