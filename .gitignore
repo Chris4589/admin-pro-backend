@@ -1,2 +1,14 @@
 
 node_modules/
+
+src/uploads/doctors/**.jpg
+src/uploads/users/**.jpg
+src/uploads/hospitals/**.jpg
+
+src/uploads/doctors/**.gif
+src/uploads/users/**.gif
+src/uploads/hospitals/**.gif
+
+src/uploads/doctors/**.jpge
+src/uploads/users/**.jpge
+src/uploads/hospitals/**.jpge

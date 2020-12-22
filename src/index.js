@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const path = require('path');
 
 const router = require('./routes/routes');
 const db = require('./configs/db');
@@ -34,6 +35,10 @@ app.use(validations);
 
 app.use('/api-docs', swagger, swaggerUi.serve, swaggerUi.setup());
 
+//devolver rutas a angular
+app.get('*', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'src/public/index.html'));
+});
 
 app.listen(port, ()=>{
     console.log(`Server en puerto ${port}`);

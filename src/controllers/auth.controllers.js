@@ -2,6 +2,7 @@ const user = require('../models/users.model');
 const responses = require('../functions/response.functions');
 const bcrypt = require('bcryptjs');
 const jwt = require('../helpers/jwt');
+const menu = require('../helpers/menu-front');
 
 const { googleVerify } = require('../helpers/google-verify');
 
@@ -22,9 +23,10 @@ module.exports = {
             if(!validPw)
                 return responses(res, 400, `password no valido`, true);
 
+            req.loged = 1;
             const generarToken = await jwt(result._id);
 
-            return responses(res, 200, generarToken, false);
+            return responses(res, 200, {generarToken, menu:menu(result.role)}, false);
         } catch (error) {
             console.log(`*login ${error}`); 
             return responses(res, 500, `Error en el servidor`, true);
@@ -35,7 +37,6 @@ module.exports = {
             const { token } = req.body;
 
             const { name, email, picture } = await googleVerify(token);
-            let usuario;
 
             result = await user.findOne({ email });
             if( !result ){
@@ -43,20 +44,20 @@ module.exports = {
                     nombre: name,
                     email,
                     password: '@@@@',
-                    img: picture
+                    img: picture,
+                    google:true
                 });
             }
             else{
                 //existe en DB lo de google
-                usuario = result;
-                usuario.google = true;
+                result.google = true;
 
-                usuario.save();
+                result.save();
             }
-
+            req.loged = 1;
             const token_jwt = await jwt(result._id);
 
-            return responses(res, 200, token_jwt, false);
+            return responses(res, 200, {token_jwt, menu:menu(result.role)}, false);
         } catch (error) {
             console.log(`*login google signIn ${error}`); 
             return responses(res, 401, `*login google signIn ${error}`, true);
@@ -71,7 +72,7 @@ module.exports = {
                 user.findById(uid, 'role google _id nombre email img')
             ]);
 
-            return responses(res, 200, {token, data}, false);
+            return responses(res, 200, {token, data, menu:menu(data.role)}, false);
         } catch (error) {
             console.log(`*login ${error}`); 
             return responses(res, 500, `*renew token ${error}`, true);

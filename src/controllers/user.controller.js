@@ -2,6 +2,7 @@
 const user = require('../models/users.model');
 const responses = require('../functions/response.functions');
 
+const menu = require('../helpers/menu-front');
 const bcrypt = require('bcryptjs');
 const jwt = require('../helpers/jwt');
 
@@ -42,8 +43,8 @@ module.exports = {
             result = await user.create(fields);
 
             const token = await jwt(result._id);
-
-            return responses(res, 200, {result, token}, false);
+            console.log({result, token, menu:menu(result.role)});
+            return responses(res, 200, {result, token, menu:menu(result.role)}, false);
         } catch (error) {
            console.log(`*Error al crear usuario ${error}`); 
            return responses(res, 500, `Error en el servidor`, true);
