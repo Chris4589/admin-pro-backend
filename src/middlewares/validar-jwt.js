@@ -6,7 +6,7 @@ module.exports = (req, res, next) =>{
     try {
         const { token } = req.headers;
 
-        if(!token && req.loged !== 1)
+        if(!token)
             return responses(res, 401, `No hay token`, true);
 
         const { uid } = jwt.verify(token, process.env.JWTSECRET);
