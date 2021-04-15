@@ -18,7 +18,7 @@ module.exports = {
             if (!files || Object.keys(files).length === 0)
                return responses(res, 400, `No files were uploaded.`, true);
             
-            const file = files.img;
+            const file = files.img;//nombre para subir por el formulario
             const namecortado = file.name.split('.');
             const extension = namecortado[namecortado.length-1];
             const validExtends = [ 'png', 'gif', 'jpg', 'jpeg'];
